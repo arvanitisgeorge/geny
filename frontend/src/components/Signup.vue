@@ -1,6 +1,6 @@
 <template>
   <b-container class="text-start mt-4">
-    <h3 class="text-2xl mb-6 text-grey-darkest">Sign In</h3>
+    <h3 class="text-2xl mb-6 text-grey-darkest">Sign Up</h3>
     <form @submit.prevent="signup">
       <div class="text-red" v-if="error">{{ error }}</div>
       <b-form-group class="py-2" id="input-group-1" label="Name:" label-for="input-1">

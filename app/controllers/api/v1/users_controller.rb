@@ -16,10 +16,6 @@ class Api::V1::UsersController < ApplicationController
     end
   end
   
-  # {
-  #   "csrf": "49u8X0WUMkVFQ2oWuU0Lv3fpSaHdAU8CQBnrwb4UTUhoopyccg0dVBuChGAJ0XT/olzKFTW4r9LJwZ0fFgZPXQ=="
-  #  }
-
   def signup
     user = User.new(user_params)
     if user.save
