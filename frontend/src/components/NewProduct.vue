@@ -31,11 +31,8 @@
 
 <script>
   import axios from 'axios'
-  import { createCookie, getCookie } from "../tools/cookie-baker";
+  import { getCookie } from "../tools/cookie-baker";
   
-  // Todo place this to the login page
-  createCookie("geny-token", "Zezx2CUnCI2Jrgt1sdZ4tlfPKPdylCClJBOqY+KcC2M94bh8B/2s+ZO00vme6Ktf7LU9cpq7afU8Yw4g3zX4zw==", 20)
-
   export default {
     name: 'NewProduct',
     data () {
@@ -62,7 +59,6 @@
           return
         }
 
-        axios.defaults.headers.common['X-CSRF-TOKEN'] = getCookie("geny-token");
         axios.post('http://localhost:3000/api/v1/products', { 
           product: 
             { 
@@ -82,7 +78,7 @@
           }
         )
         .then(response => {
-          this.$router.replace(`/product/${response.id}`)
+          this.$router.replace(`/product/${response.data.id}`)
         })
         .catch(error => this.setError(error, 'Cannot retrieve products'))
       },

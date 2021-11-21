@@ -7,14 +7,17 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <router-link to="/" class="nav-link" v-if="!signedIn()">Products</router-link>
+          <router-link to="/" class="nav-link" >Products</router-link>
         </li>
         <li class="nav-item">
           <!-- <router-link to="/newproduct" class="nav-link" v-if="signedIn()">New Product</router-link> -->
-          <router-link to="/newproduct" class="nav-link" v-if="!signedIn()">New Product</router-link>
+          <router-link to="/newproduct" class="nav-link" v-if="signedIn()">New Product</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/login" class="nav-link" v-if="!signedIn()">Sign in</router-link>
+        </li>
+        <li class="nav-item">
+          <span v-on:click="signOut()" class="nav-link cursor-pointer" v-if="signedIn()">Sign out</span>
         </li>
       </ul>
     </div>
@@ -22,28 +25,24 @@
 </template>
 
 <script>
-export default {
-  name: 'Header',
-  created () {
-    this.signedIn()
-  },
-  methods: {
-    setError (error, text) {
-      this.error = (error.response && error.response.data && error.response.data.error) || text
+  import { getCookie, destroyCookie } from "../tools/cookie-baker";
+
+  export default {
+    name: 'Header',
+    created () {
+      this.signedIn()
     },
-    signedIn () {
-      console.log(1)
-      return localStorage.signedIn
-    },
-    signOut () {
-      this.$http.secured.delete('/signin')
-        .then(response => {
-          delete localStorage.csrf
-          delete localStorage.signedIn
-          this.$router.replace('/')
-        })
-        .catch(error => this.setError(error, 'Cannot sign out'))
+    methods: {
+      setError (error, text) {
+        this.error = (error.response && error.response.data && error.response.data.error) || text
+      },
+      signedIn () {
+        return getCookie("geny-token")
+      },
+      signOut () {
+        destroyCookie("geny-token")
+        window.location.href = "http://localhost:8080/";
+      }
     }
-  }
 }
 </script>

@@ -1,65 +1,55 @@
 <template>
-  <div class="max-w-sm m-auto my-8">
-    <div class="border p-10 border-grey-light shadow rounded">
-      <h3 class="text-2xl mb-6 text-grey-darkest">Sign In</h3>
-      <form @submit.prevent="signin">
-        <div class="text-red" v-if="error">{{ error }}</div>
-        <div class="mb-6">
-          <label for="email" class="label">E-mail Address</label>
-          <input type="email" v-model="email" class="input" id="email" placeholder="andy@web-crunch.com">
-        </div>
-        <div class="mb-6">
-          <label for="password" class="label">Password</label>
-          <input type="password" v-model="password" class="input" id="password" placeholder="Password">
-        </div>
-        <button type="submit" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green hover:bg-green-dark block w-full py-4 text-white items-center justify-center">Sign In</button>
-      </form>
-    </div>
-  </div>
+  <b-container class="text-start mt-4">
+    <h3 class="text-2xl mb-6 text-grey-darkest">Sign In</h3>
+    <form @submit.prevent="signin">
+      <div class="text-red" v-if="error">{{ error }}</div>
+      <b-form-group class="py-2" id="input-group-1" label="Email:" label-for="input-2">
+        <b-form-input id="input-2" v-model="email" placeholder="anakin@starwars.com" required></b-form-input>
+      </b-form-group>
+      <b-form-group class="py-2" id="input-group-1" label="Password:" label-for="input-2">
+        <b-form-input id="input-2" v-model="password" placeholder="thechosenone" required></b-form-input>
+      </b-form-group>
+      <button type="submit" class="">Sign In</button>
+    </form>
+  </b-container>
 </template>
 
 <script>
-export default {
-  name: 'Signin',
-  data () {
-    return {
-      email: '',
-      password: '',
-      error: ''
-    }
-  },
-  created () {
-    this.checkSignedIn()
-  },
-  updated () {
-    this.checkSignedIn()
-  },
-  methods: {
-    signin () {
-      this.$http.plain.post('/signin', { email: this.email, password: this.password })
-        .then(response => this.signinSuccessful(response))
-        .catch(error => this.signinFailed(error))
-    },
-    signinSuccessful (response) {
-      if (!response.data.csrf) {
-        this.signinFailed(response)
-        return
+  import axios from 'axios'
+  import { getCookie, createCookie } from "../tools/cookie-baker";
+  export default {
+    name: 'Signin',
+    data () {
+      return {
+        email: '',
+        password: '',
+        error: ''
       }
-      localStorage.csrf = response.data.csrf
-      localStorage.signedIn = true
-      this.error = ''
-      this.$router.replace('/records')
     },
-    signinFailed (error) {
-      this.error = (error.response && error.response.data && error.response.data.error) || ''
-      delete localStorage.csrf
-      delete localStorage.signedIn
+    created () {
+      if (!getCookie("geny-token")) {
+        // this.$router.replace('/')
+      }
     },
-    checkSignedIn () {
-      if (localStorage.signedIn) {
-        this.$router.replace('/records')
+    methods: {
+      signin () {
+        axios.post('http://localhost:3000/api/v1/login', { email: this.email, password: this.password })
+          .then(response => this.signinSuccessful(response))
+          .catch(error => this.signinFailed(error))
+      },
+      signinSuccessful (response) {
+        if (!response.data.csrf) {
+          this.signinFailed(response)
+          return
+        }
+        createCookie('geny-token', response.data.csrf, 30)
+        this.error = ''
+        this.$router.replace('/')
+        window.location.href = "http://localhost:8080/";
+      },
+      signinFailed (error) {
+        this.error = (error.response && error.response.data && error.response.data.error) || ''
       }
     }
   }
-}
 </script>
