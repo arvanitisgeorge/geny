@@ -19,6 +19,9 @@
         <li class="nav-item">
           <span v-on:click="signOut()" class="nav-link cursor-pointer" v-if="signedIn()">Sign out</span>
         </li>
+        <li class="nav-item">
+          <router-link to="/signup" class="nav-link" v-if="!signedIn()">Sign up</router-link>
+        </li>
       </ul>
     </div>
   </nav>

@@ -3,18 +3,12 @@
     <ul class="mt-4">
       <div class="py-4" v-for="product in products" :key="product.id">
         <div class="flex items-center justify-between flex-wrap">
-          <p class="">
-            
-          </p>
           <b-container v-on:click="$router.replace(`/product/${product.id}`)" class="bv-example-row cursor-pointer">
             <b-row>
               <b-col><span class="text-title">{{ product.title }}</span></b-col>
             </b-row>            
             <b-row>
               <b-col><span class="text-italics">{{ product.summary }}</span></b-col>
-            </b-row>
-            <b-row>
-              <b-col><span>{{ product.final_value }}</span></b-col>
             </b-row>
           </b-container>
         </div>
