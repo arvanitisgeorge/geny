@@ -1,41 +1,51 @@
 <template>
-  <div class="main">
-    <h1>{{ msg }}</h1>
-    <b-container class="bv-example-row">
-      <b-row>
-        <b-col>1 of 3</b-col>
-        <b-col>2 of 3</b-col>
-        <b-col>3 of 3</b-col>
-      </b-row>
-    </b-container>
+  <div class="max-w-md m-auto py-2">
+    <ul class="mt-4">
+      <div class="py-4" v-for="product in products" :key="product.id">
+        <div class="flex items-center justify-between flex-wrap">
+          <p class="">
+            
+          </p>
+          <b-container v-on:click="$router.replace(`/product/${product.id}`)" class="bv-example-row cursor-pointer">
+            <b-row>
+              <b-col><span class="text-title">{{ product.title }}</span></b-col>
+            </b-row>            
+            <b-row>
+              <b-col><span class="text-italics">{{ product.summary }}</span></b-col>
+            </b-row>
+            <b-row>
+              <b-col><span>{{ product.final_value }}</span></b-col>
+            </b-row>
+          </b-container>
+        </div>
+      </div>
+    </ul>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'Main',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+  import axios from 'axios'
+
+  export default {
+    name: 'Main',
+    data () {
+      return {
+        products: [],
+        error: '',
+        editedProduct: ''
+      }
+    },
+    mounted () {
+      axios.get('http://localhost:3000/api/v1/products')
+      .then(response => {
+        this.products = response.data
+      })
+      .catch(error => this.setError(error, 'Cannot retrieve products'))
+    },
+    methods: {
+      setError (error, text) {
+        this.error = (error.response && error.response.data && error.response.data.error) || text
+      },
     }
   }
-}
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
