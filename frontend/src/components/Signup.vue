@@ -31,6 +31,7 @@
         surname: '',
         email: '',
         password: '',
+        error: ''
       }
     },
     created () {
